@@ -1,0 +1,193 @@
+{
+  "name": "Executive Summary Agent Gmail",
+  "nodes": [
+    {
+      "parameters": {
+        "model": "gpt-4.1",
+        "options": {
+          "temperature": 0.1
+        }
+      },
+      "id": "16a1a9fc-ee18-4398-a3f9-4f34b76b00e3",
+      "name": "OpenAI Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        336,
+        240
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "LniH1mAXbg3D5mzO",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "endpointUrl": "https://mcp.appsflyer.com/auth/mcp",
+        "serverTransport": "httpStreamable",
+        "authentication": "bearerAuth"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpClientTool",
+      "typeVersion": 1.1,
+      "position": [
+        480,
+        240
+      ],
+      "id": "558b20a6-0eaa-4c2e-8c7d-f81a8703af1c",
+      "name": "MCP Client",
+      "credentials": {
+        "httpBearerAuth": {
+          "id": "1rL6S4itxfEdPubn",
+          "name": "Bearer Auth MCP"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "toText",
+        "sourceProperty": "output",
+        "options": {
+          "fileName": "=AppsFlyer_Dashboard_{{ new Date().toLocaleDateString('en-US').replace(/\\//g, '-') }}_{{ new Date().toLocaleTimeString('en-US', {hour12: false}).replace(/:/g, '') }}.html"
+        }
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        720,
+        32
+      ],
+      "id": "8c55f84b-b5e6-4cc5-9e11-53ae45ca0831",
+      "name": "Convert to File"
+    },
+    {
+      "parameters": {
+        "sendTo": "liaz.kamper@appsflyer.com",
+        "subject": "=AppsFlyer Gaming Dashboard - {{ new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' }) }}",
+        "message": "=<html> <body style=\"font-family: Arial, sans-serif; line-height: 1.6; color: #333;\">     <div style=\"max-width: 600px; margin: 0 auto; padding: 20px;\">                  <div style=\"background: linear-gradient(135deg, #7c4dff, #6ee7f7); padding: 20px; border-radius: 8px; color: white; text-align: center; margin-bottom: 20px;\">             <h2 style=\"margin: 0; font-size: 24px;\">📊 AppsFlyer Gaming Dashboard</h2>             <p style=\"margin: 5px 0 0 0; opacity: 0.9;\">Monthly Performance Report</p>         </div>          <p>Hi Team,</p>          <p>Your latest AppsFlyer performance dashboard is ready! 📈</p>          <div style=\"background: #f8f9fa; padding: 15px; border-radius: 6px; border-left: 4px solid #7c4dff; margin: 15px 0;\">             <h3 style=\"color: #7c4dff; margin: 0 0 10px 0;\">📋 What's Inside:</h3>             <ul style=\"margin: 0; padding-left: 20px;\">                 <li><strong>💰 Spending Analysis</strong> - Monthly acquisition costs and efficiency</li>                 <li><strong>⚡ Early Performance</strong> - D1, D7, D14 cohort monetization</li>                 <li><strong>🎯 Executive Insights</strong> - Data-driven recommendations</li>                 <li><strong>📊 Visual Charts</strong> - ROAS progression and trends</li>             </ul>         </div>          <div style=\"text-align: center; margin: 25px 0;\">             <div style=\"background: #00d18f; color: white; padding: 12px 20px; border-radius: 6px; display: inline-block;\">                 <strong>📎 Dashboard attached as HTML file</strong>             </div>         </div>          <p style=\"font-size: 14px; color: #666; border-top: 1px solid #eee; padding-top: 15px; margin-top: 20px;\">             <strong>App:</strong> com.appsflyer.android.demo.app.gaming<br>             <strong>Generated:</strong> {{ new Date().toLocaleDateString('en-US', {                  weekday: 'long',                  year: 'numeric',                  month: 'long',                  day: 'numeric',                 hour: '2-digit',                 minute: '2-digit'             }) }}         </p>          <p style=\"font-size: 12px; color: #999;\">             🤖 Automated Report • AppsFlyer Business Intelligence         </p>              </div> </body> </html>",
+        "options": {
+          "attachmentsUi": {
+            "attachmentsBinary": [
+              {}
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        928,
+        32
+      ],
+      "id": "b019b92d-5d42-4d73-a98e-a7290e29f33b",
+      "name": "Send a message",
+      "webhookId": "9550a798-5ed0-44dc-a53d-3e41fa5e6664",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "kRP3pLkDdleQtIEv",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        48,
+        32
+      ],
+      "id": "73482984-502e-4833-87b8-0551e079a2d1",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "Create a blue and green themed LAST WEEK performance HTML dashboard for my Android gaming app com.appsflyer.android.demo.app.gaming that includes the following:\n\nSections with emojis to enhance visual appeal:\n\nExecutive Summary, Key Performance, Signals Actionable Recommendations Tables with data for:\n\nClicks, installs, d1, d7, and d14 performance metrics (installs, revenue, ROI).\nAdd emojis throughout titles, sections, and tables for clarity and engagement.\n\nMake sure the dashboard uses a clean, readable style with blue and green color palette, subtle shadows, and rounded borders for sections and tables.",
+        "options": {
+          "systemMessage": "You are an AI agent with a single, specific role: Retrieve AppsFlyer data for the requested app and generate a complete HTML dashboard.\n\nCRITICAL: Output ONLY the HTML code. \n\nCRITICAL: AppsFlyer Tool Date Format Requirements\nMANDATORY: Today date is in the tool get_supported_metadata\n\nMANDATORY: The AppsFlyer MCP tool requires dates parameter as an object with start/end keys, NOT as an array.\nAlways use this exact format:\njson{\n  \"app_ids\": [\"EXTRACTED_APP_ID_FROM_USER\"],\n  \"dates\": {\n    \"start\": \"2025-08-01\",\n    \"end\": \"2025-08-31\"\n  },\n  \"metricsIDs\": [\"installs-cost\"],\n  \"groupings\": [],\n  \"row_count\": 1\n}",
+          "returnIntermediateSteps": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        336,
+        32
+      ],
+      "id": "6ff86717-da18-46e7-8f35-f2ab7c73c9d9",
+      "name": "AI Agent"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "OpenAI Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MCP Client": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "dfda0f00-4eaf-451b-8c30-882dcb9639f2",
+  "meta": {
+    "templateId": "self-building-ai-agent",
+    "templateCredsSetupCompleted": true,
+    "instanceId": "5152d9ac095ac50ac164490ed5b6ca31f56c3526e6cebef2c21d86ffe00ae57a"
+  },
+  "id": "9r7Pk0hvzdIoDKVv",
+  "tags": []
+}
