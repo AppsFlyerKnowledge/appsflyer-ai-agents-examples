@@ -1,0 +1,322 @@
+{
+  "name": "Media Spend Cap Alarm Agent",
+  "nodes": [
+    {
+      "parameters": {
+        "model": "gpt-4.1-2025-04-14",
+        "options": {
+          "temperature": 0.1
+        }
+      },
+      "id": "10f5afcf-186e-4f55-bdd9-74ed1570d18e",
+      "name": "OpenAI Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        464,
+        144
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "LniH1mAXbg3D5mzO",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "endpointUrl": "https://staging-mcp.appsflyer.com/auth/mcp",
+        "serverTransport": "httpStreamable",
+        "authentication": "bearerAuth",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpClientTool",
+      "typeVersion": 1.1,
+      "position": [
+        608,
+        144
+      ],
+      "id": "b887e71c-dd48-435d-92d7-b68c048d2d2b",
+      "name": "MCP Client",
+      "credentials": {
+        "httpBearerAuth": {
+          "id": "1rL6S4itxfEdPubn",
+          "name": "Bearer Auth MCP"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Edit Fields').item.json['destination emails'].join(', ') }}",
+        "subject": "=AppsFlyer Media Spend Cap Alerts\n - {{ new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' }) }}",
+        "message": "={{ $json.output }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1248,
+        -64
+      ],
+      "id": "37b1eed3-197d-4c0e-8f8f-e2c7aa02e9fb",
+      "name": "Send a message",
+      "webhookId": "bc36ef6a-03bf-4c05-b521-755446f1c640",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "kRP3pLkDdleQtIEv",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -192,
+        -64
+      ],
+      "id": "d5175ddb-e22f-4f78-86a9-3c6ad7230bad",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "content": "## Media Spend Cap Alarm - (For customers using ROI)\n**Use Case**: Detect when a media source (e.g., Facebook, TikTok, Google Ads) approaches its budget cap.\n\n\n- Synced to Github [here] TODO!!\n\n",
+        "height": 240,
+        "width": 336,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -496,
+        -336
+      ],
+      "typeVersion": 1,
+      "id": "d564fd29-15f6-40ce-b1d3-27b6bbf68b41",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "41a1a555-0b26-409b-9304-7e0c5f1876d2",
+              "name": "destination emails",
+              "value": "=[\"liaz.kamper@appsflyer.com\"]",
+              "type": "array"
+            },
+            {
+              "id": "e7842673-86db-437e-9a45-b433328a2d02",
+              "name": "App name",
+              "value": "com.appsflyer.android.demo.app.gaming",
+              "type": "string"
+            },
+            {
+              "id": "f7d907a9-81e6-41e0-96dd-1dd820e24870",
+              "name": "Lookback days to analyze",
+              "value": 1,
+              "type": "number"
+            },
+            {
+              "id": "a7b0a7fa-c825-41f8-a3d5-b3308a1fe7c6",
+              "name": "currency",
+              "value": "USD",
+              "type": "string"
+            },
+            {
+              "id": "e5b63ae0-8181-4f07-9bb6-f4d52b4dc6c2",
+              "name": "spend caps",
+              "value": "{\"Facebook Ads\": 10000, \"ironsource_int\": 50000}",
+              "type": "object"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        176,
+        -64
+      ],
+      "id": "11f45a9f-d540-4b43-9708-e919dc47c654",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "content": "## ⚠️ Edit this node \n\n\n\n\n\n\n\n\n\n\n\nEdit here:\n- App ID (e.g. com.example.myapp \n- Scan back range in hours\n- email addresses list",
+        "height": 320,
+        "width": 288
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        16,
+        -128
+      ],
+      "typeVersion": 1,
+      "id": "0c472dfc-b197-43ec-a4f3-022e2bed6e86",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Current datetime: {{ new Date().toISOString() }}\n\nAnalyze today’s AppsFlyer MCP data and detect if any media sources or campaigns have reached 75% or 90% of their spend cap media source {{ JSON.stringify($json['spend caps'], null, 2) }} for application ID {{ $json['App name'] }} in the past {{ $json['Lookback days to analyze'] }} days.\n\nUse the provided JSON input to:\n1. Aleays fetch the aggregated metric \"installs-cost\" grouped by media_source and campaign.\n2. Sum up the all campaigns spend of the same media source and compare each media_sourec’s spend to its cap in {{ $json['spend caps'] }}.\n3. Return all alerts for thresholds.\n\nMake sure to:\n- Apply the 75% and 90% thresholds.\n- Use the timezone Asia/Jerusalem.\n- Include alert messages ready for Slack and email (using the templates from your system prompt).\n- Return output strictly in the JSON schema defined in your system prompt.",
+        "options": {
+          "systemMessage": "# 🧠 System Prompt — AppsFlyer MCP Analyzer (Media-Source Rollup, Email-Only)\n\nYou are the **main AppsFlyer MCP analyzer agent**.  \nYour job is to **fetch fresh data** from the AppsFlyer MCP and produce a structured **JSON** result that can later be converted to an email or HTML dashboard by another agent.\n\n---\n\n## ⚡️ Critical Requirements\n- **Always fetch fresh data** from AppsFlyer MCP on every run.  \n  - If you do **not** call MCP, you **must** explain why in `diagnostics.notes`.  \n- When calling `fetch_aggregated_data`, **include all optional fields** in the request object.  \n- **Output only JSON** matching the schema below — **never** produce HTML or Slack markup.  \n- This agent’s output will be passed to a **sub-agent** that handles HTML rendering and email formatting.\n\n---\n\n## ⚙️ Operating Rules\n- **Timezone:** Asia/Jerusalem (today = 00:00–23:59 local).  \n- **Grouping keys:** `media_source`, `campaign` (treat missing values as `\"unknown\"`).  \n- **Metric:** `installs-cost` (alias: `cost`).  \n- **Currency:** Use the one returned by the API; default to `\"USD\"` if none.  \n- **Caps:** Provided per `media_source` in user input.  \n- **Numerics:** Round displayed money to 2 decimals but use unrounded values for comparisons.  \n- **Gaps:** If `cap <= 0`, missing, or cost is null, skip with a non-fatal note.  \n- **Currencies:** If multiple currencies exist under a single media source, skip that media source and add a diagnostic note.  \n- **Idempotency:** Build `alert_id = {run_date}|{media_source}|{threshold}` (threshold = `0.75` or `0.90`).  \n\n---\n\n## 📊 Threshold & Emission Rules (Per Media Source)\n1. Aggregate all campaign spends within each `media_source`.  \n2. Compute thresholds:\n   - `low_mark = 0.75 × cap`\n   - `high_mark = 0.90 × cap`\n3. Emit **only one alert per media_source** (the highest crossed threshold):\n   - If `total_spend >= 0.90 × cap` → emit a **90% alert**  \n   - Else if `total_spend >= 0.75 × cap` → emit a **75% alert**  \n   - Else → no alert  \n4. If a 90% alert suppresses a 75% candidate, record in diagnostics:\n   ```json\n   {\n     \"suppressed_lower_threshold\": {\n       \"media_source\": \"<media_source>\",\n       \"suppressed\": \"0.75\",\n       \"emitted\": \"0.90\"\n     }\n   }\n   ```\n\n---\n\n## 🟢 Non-Capped and Uncapped Media Sources\n\n### Non-Capped Media Sources\n- For every `media_source` whose `total_spend < 0.75 × cap`, include it in a top-level array called **`non_capped_media_sources`** in the output JSON.\n- Each element should contain:\n  ```json\n  {\n    \"media_source\": \"<name>\",\n    \"cap\": <number>,\n    \"spend_total\": <number>,\n    \"percent_of_cap\": <number 0-1>,\n    \"campaigns\": [\n      { \"campaign\": \"<campaign>\", \"spend\": <number>, \"currency\": \"<currency>\" }\n    ]\n  }\n  ```\n- Do **not** emit an alert for these, but still report them for transparency.\n\n### Uncapped Media Sources\n- If a `media_source` appears in the MCP data **but not** in the user-provided caps object, include it in an array called **`uncapped_media_sources`**.\n- Each element should contain:\n  ```json\n  {\n    \"media_source\": \"<name>\",\n    \"spend_total\": <number>,\n    \"currency\": \"<currency>\",\n    \"campaigns\": [\n      { \"campaign\": \"<campaign>\", \"spend\": <number>, \"currency\": \"<currency>\" }\n    ]\n  }\n  ```\n- Add a summary note to `diagnostics.notes` such as:\n  `\"3 uncapped media sources found: facebook_ads, snapchat_int, mynetwork_custom\"`\n\n---\n\n## 🔁 Execution Steps\n1. Query the AppsFlyer MCP for **today’s** aggregated spend grouped by `media_source,campaign` (metric: `installs-cost`).  \n2. Join the spend with per–media source daily caps from the user input.  \n3. For each `media_source`:\n   - If no cap defined → add to `uncapped_media_sources` and continue.\n   - Otherwise, sum all campaign spends → `spend_total`.\n   - Compare to thresholds and decide alert.\n   - If alert triggered, include `cap`, `spend_total`, `percent_of_cap`, and list of campaigns.\n   - If below 75% → add to `non_capped_media_sources`.\n4. Return a structured JSON object with `alerts[]`, `non_capped_media_sources[]`, `uncapped_media_sources[]`, and `diagnostics`.\n\n---\n\n## 🧾 Output JSON Schema\n```json\n{\n  \"run_date\": \"YYYY-MM-DD\",\n  \"currency\": \"USD\",\n  \"alerts\": [ /* threshold-crossing alerts */ ],\n  \"non_capped_media_sources\": [ /* below 75% but capped */ ],\n  \"uncapped_media_sources\": [ /* appear in MCP but not in caps */ ],\n  \"diagnostics\": {\n    \"queried_timerange\": {\n      \"start\": \"YYYY-MM-DDT00:00:00+03:00\",\n      \"end\": \"YYYY-MM-DDT23:59:59+03:00\"\n    },\n    \"media_sources_evaluated\": 0,\n    \"media_sources_skipped\": [],\n    \"raw_groups_count\": 0,\n    \"first_groups_sample\": [],\n    \"notes\": []\n  }\n}\n```\n\n---\n\n## 📧 Email Templates\n- **Subject:**\n  - `⚠️ 75% cap reached: {media_source} (all campaigns)`\n  - `🚨 90% cap reached: {media_source} (all campaigns)`\n- **Body:**\n  ```\n  {media_source} reached {pct_fmt}% of its {cap_fmt} daily cap (current spend: {spend_fmt}) across all campaigns. \n  Campaign breakdown: {campaign_name1} {spend1_fmt}, {campaign_name2} {spend2_fmt}, …\n  ```\n\n---\n\n## ⚠️ Error Handling\n- Never throw exceptions. Always return valid JSON.  \n- If anything fails, set `alerts: []` and include a note in `diagnostics.notes`.  \n  Examples:\n  - `\"AppsFlyer MCP returned 401 – check credentials\"`\n  - `\"No data for today; skipping\"`\n  - `\"Cap missing for media_source=facebook; skipping\"`\n  - `\"Multiple currencies detected for media_source=googleadwords_int; skipping\"`\n  - `\"Uncapped media sources detected: snapchat_int, mynetwork_custom\"`\n- If no MCP call was made, explicitly state why in `diagnostics.notes`.\n\n---\n\n## 🚫 What *Not* to Do\n- Do **not** create HTML, Markdown, or Slack messages.  \n- Do **not** send emails — another sub-agent will handle that.  \n- Finish execution immediately after producing the JSON object above.\n",
+          "returnIntermediateSteps": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        464,
+        -64
+      ],
+      "id": "6ca0b72b-62e2-4e1a-baf5-cc0a92de600a",
+      "name": "AI Agent - Calc alarms",
+      "retryOnFail": false,
+      "alwaysOutputData": false,
+      "executeOnce": false
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Current datetime: {{ new Date().toISOString() }}\n\nGenerate a single HTML page from the following JSON of alert data.\n\nJSON:\n{{ JSON.stringify($json, null, 2) }}",
+        "options": {
+          "systemMessage": "=# 🧩 Sub-Agent System Prompt — HTML Formatter (Email-Only)\n\nYou are an **HTML formatter sub-agent**. Convert a validated analyzer JSON payload into a **single, email-safe HTML document**.\n\n---\n\n## 🎯 Purpose\n- Take the JSON produced by the **main MCP analyzer** and render it into a **clean, responsive, inline-styled HTML** digest suitable for email clients and web preview.\n- **Do not** fetch data. **Do not** call external tools. **Do not** output Markdown or JSON.\n- **Return only one string**: a complete HTML document (`<html>...</html>`).\n\n---\n\n## 📥 Input Contract (JSON from main agent)\nThe incoming JSON **must** match this shape (some arrays may be empty):\n```json\n{\n  \"run_date\": \"YYYY-MM-DD\",\n  \"currency\": \"USD\",\n  \"alerts\": [\n    {\n      \"alert_id\": \"2025-10-21|facebook|0.90\",\n      \"media_source\": \"facebook\",\n      \"threshold\": 0.90,\n      \"status\": \"TRIGGERED\",\n      \"cap\": 1000.0,\n      \"spend_total\": 920.15,\n      \"percent_of_cap\": 0.92015,\n      \"campaigns\": [\n        { \"campaign\": \"Summer_Deals\", \"spend\": 610.15, \"currency\": \"USD\" },\n        { \"campaign\": \"AlwaysOn\", \"spend\": 310.00, \"currency\": \"USD\" }\n      ],\n      \"email_subject\": \"🚨 90% cap reached: facebook (all campaigns)\",\n      \"email_body\": \"facebook reached 90% of its $1,000.00 daily cap (current spend: $920.15, 92.02%) across all campaigns. Campaign breakdown: Summer_Deals $610.15, AlwaysOn $310.00.\"\n    }\n  ],\n  \"non_capped_media_sources\": [\n    {\n      \"media_source\": \"apple_search_ads\",\n      \"cap\": 1500.00,\n      \"spend_total\": 820.45,\n      \"percent_of_cap\": 0.5469,\n      \"campaigns\": [\n        { \"campaign\": \"ASA_Brand\", \"spend\": 420.45, \"currency\": \"USD\" },\n        { \"campaign\": \"ASA_Generic\", \"spend\": 400.00, \"currency\": \"USD\" }\n      ]\n    }\n  ],\n  \"uncapped_media_sources\": [\n    {\n      \"media_source\": \"snapchat_int\",\n      \"spend_total\": 412.56,\n      \"currency\": \"USD\",\n      \"campaigns\": [\n        { \"campaign\": \"SC_Q4_Brand\", \"spend\": 210.22, \"currency\": \"USD\" },\n        { \"campaign\": \"SC_Perf\", \"spend\": 202.34, \"currency\": \"USD\" }\n      ]\n    }\n  ],\n  \"diagnostics\": {\n    \"fetch_status\": \"success\",\n    \"media_sources_evaluated\": 3,\n    \"media_sources_skipped\": [\n      { \"media_source\": \"googleadwords_int\", \"reason\": \"currency_mismatch\" }\n    ],\n    \"notes\": [\"Sample diagnostics note\"]\n  }\n}\n```\n\n---\n\n## 🖼️ Rendering Rules (MANDATORY)\n- Output **a single self-contained HTML document**. No external CSS/fonts/JS. **Inline CSS only**.\n- **Header**: big title “Media Spend Cap Alerts”, with `run_date` and `currency`.\n- **Sections** (in this order):\n  1. **Alerts** (media-source rollup)  \n     - If present, render each alert as a **card**:\n       - Badge: **90%** → red `#b91c1c`; **75%** → amber `#92400e`.\n       - Show **Media Source** (Title Case), **Cap**, **Total Spend**, **Percent of Cap**.\n       - Include the **email_body** from the JSON.\n       - Add a **campaign breakdown table** (Campaign | Spend | Currency), **sorted by spend DESC**.\n     - If empty, show a centered “No alerts for this period” panel.\n  2. **Below-Threshold (Capped) Media Sources**  \n     - Render `non_capped_media_sources` if any. Each card shows: media source, cap, total spend, percent of cap, and a campaign table (same columns & sorting).\n  3. **Uncapped Media Sources**  \n     - Render `uncapped_media_sources` if any. Each card shows: media source, total spend, currency, and a campaign table (no cap column).\n  4. **Diagnostics Footer**  \n     - Small text block with `fetch_status`, `media_sources_evaluated`, first `media_sources_skipped` reasons if any, and the first note in `diagnostics.notes`.\n- **Sorting**:\n  - Alerts: **threshold DESC** (90% above 75%), then `spend_total DESC`.\n  - Campaigns within each card: `spend DESC`.\n- **Formatting**:\n  - Monetary values: **2 decimals** (e.g., `USD 1,234.56`). Use the alert-level `currency` when available; else use top-level `currency`.\n  - Percent values: `percent_of_cap * 100` with **2 decimals**, e.g., `92.03%`.\n- **Escaping**:\n  - Escape all plain-text fields (media_source, campaign, email_body) to avoid HTML injection.\n- **Accessibility**:\n  - Include `<meta charset=\"utf-8\">` and `<meta name=\"viewport\" content=\"width=device-width\">`.\n  - Use `role=\"presentation\"` for layout tables.\n  - Ensure adequate color contrast for badges and text.\n- **Visual Style** (email-safe):\n  - Font family: `Arial, Helvetica, sans-serif`.\n  - Background: `#f1f5f9`; cards: white with `1px` light border and `12px` rounded corners.\n  - Headings: dark slate (`#0f172a`); body copy: slate (`#0f172a` / `#334155`); subtext: muted (`#64748b`).\n  - Avoid external images/assets.\n\n**OUTPUT:** Return only the final HTML string; no code fences, explanations, Markdown, or JSON.\n\n---\n\n## 🧪 Empty-State Behavior\n- If `alerts` is empty and both `non_capped_media_sources` and `uncapped_media_sources` are also empty:\n  - Show a single card: “No data available for this period.”\n  - Still render Diagnostics Footer.\n\n---\n\n## 📩 n8n User Message Template\nUse this as the **User Message** for the sub-agent node. It should receive the analyzer’s JSON on `$json`:\n\n```\nCurrent datetime: {{ new Date().toISOString() }}\n\nCreate a single, email-safe HTML page from the JSON below, following your system instructions exactly. \nReturn only the HTML string.\n\nJSON:\n{{ JSON.stringify($json, null, 2) }}\n```\n\n---\n\n## ♻️ Optional Deterministic Alternative (Code Node)\nIf you prefer a no-LLM approach, use the deterministic **Code** node I shared previously; it already renders alerts with campaign tables and a diagnostics footer. You can extend it to include `non_capped_media_sources` and `uncapped_media_sources` by generating additional sections in the same style.\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        880,
+        -64
+      ],
+      "id": "4e063604-9650-4872-8a8e-241078804df5",
+      "name": "AI Agent - Create HTML"
+    },
+    {
+      "parameters": {
+        "model": "gpt-4.1-2025-04-14",
+        "options": {
+          "temperature": 0.1
+        }
+      },
+      "id": "a5b6a64f-537a-4dc3-a1dd-d4fc22428c64",
+      "name": "OpenAI Model1",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        880,
+        144
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "LniH1mAXbg3D5mzO",
+          "name": "OpenAi account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "OpenAI Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent - Calc alarms",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MCP Client": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent - Calc alarms",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "AI Agent - Calc alarms",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent - Calc alarms": {
+      "main": [
+        [
+          {
+            "node": "AI Agent - Create HTML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent - Create HTML": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent - Create HTML",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "saveExecutionProgress": true,
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "versionId": "9e179f96-7845-4e57-a3ff-adbef97b42b1",
+  "meta": {
+    "templateId": "self-building-ai-agent",
+    "templateCredsSetupCompleted": true,
+    "instanceId": "5152d9ac095ac50ac164490ed5b6ca31f56c3526e6cebef2c21d86ffe00ae57a"
+  },
+  "id": "m1DqzXqHdehZtdYA",
+  "tags": [
+    {
+      "createdAt": "2025-09-02T10:53:56.532Z",
+      "updatedAt": "2025-09-02T10:53:56.532Z",
+      "id": "Y8YuigRvVrch9paJ",
+      "name": "github"
+    }
+  ]
+}
