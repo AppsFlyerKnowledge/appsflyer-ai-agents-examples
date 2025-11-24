@@ -8,13 +8,13 @@
           "temperature": 0.1
         }
       },
-      "id": "10f5afcf-186e-4f55-bdd9-74ed1570d18e",
+      "id": "8102ac7a-2ca5-418a-82f1-4eaf4ffe0ef0",
       "name": "OpenAI Model",
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1,
       "position": [
-        464,
-        144
+        960,
+        480
       ],
       "credentials": {
         "openAiApi": {
@@ -25,18 +25,22 @@
     },
     {
       "parameters": {
-        "endpointUrl": "https://staging-mcp.appsflyer.com/auth/mcp",
+        "endpointUrl": "https://mcp.appsflyer.com/auth/mcp",
         "serverTransport": "httpStreamable",
         "authentication": "bearerAuth",
+        "include": "selected",
+        "includeTools": [
+          "fetch_aggregated_data"
+        ],
         "options": {}
       },
       "type": "@n8n/n8n-nodes-langchain.mcpClientTool",
       "typeVersion": 1.1,
       "position": [
-        608,
-        144
+        1104,
+        480
       ],
-      "id": "b887e71c-dd48-435d-92d7-b68c048d2d2b",
+      "id": "d0d01725-d3c3-4e56-8451-18055a90c3d6",
       "name": "MCP Client",
       "credentials": {
         "httpBearerAuth": {
@@ -55,10 +59,10 @@
       "type": "n8n-nodes-base.gmail",
       "typeVersion": 2.1,
       "position": [
-        1248,
-        -64
+        1744,
+        272
       ],
-      "id": "37b1eed3-197d-4c0e-8f8f-e2c7aa02e9fb",
+      "id": "5e398cd0-a73c-4aff-8fe6-6524a8696f6e",
       "name": "Send a message",
       "webhookId": "bc36ef6a-03bf-4c05-b521-755446f1c640",
       "credentials": {
@@ -73,10 +77,10 @@
       "type": "n8n-nodes-base.manualTrigger",
       "typeVersion": 1,
       "position": [
-        -192,
-        -64
+        304,
+        272
       ],
-      "id": "d5175ddb-e22f-4f78-86a9-3c6ad7230bad",
+      "id": "8d9e3110-2af1-4644-8b3c-d0cf655c6b61",
       "name": "When clicking ‘Execute workflow’"
     },
     {
@@ -88,11 +92,11 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        -496,
-        -336
+        0,
+        0
       ],
       "typeVersion": 1,
-      "id": "d564fd29-15f6-40ce-b1d3-27b6bbf68b41",
+      "id": "7a85d57f-47f0-496b-b855-a28ec008c93c",
       "name": "Sticky Note"
     },
     {
@@ -136,10 +140,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        176,
-        -64
+        672,
+        272
       ],
-      "id": "11f45a9f-d540-4b43-9708-e919dc47c654",
+      "id": "09a1624f-0860-47b8-b1d5-3dda5e0bcd37",
       "name": "Edit Fields"
     },
     {
@@ -150,11 +154,11 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        16,
-        -128
+        512,
+        208
       ],
       "typeVersion": 1,
-      "id": "0c472dfc-b197-43ec-a4f3-022e2bed6e86",
+      "id": "9ea94d54-b997-4aad-b333-feef767b5da5",
       "name": "Sticky Note1"
     },
     {
@@ -169,10 +173,10 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 2.2,
       "position": [
-        464,
-        -64
+        960,
+        272
       ],
-      "id": "6ca0b72b-62e2-4e1a-baf5-cc0a92de600a",
+      "id": "3fb018b0-49cb-49b7-83a9-9b995fdf41dc",
       "name": "AI Agent - Calc alarms",
       "retryOnFail": false,
       "alwaysOutputData": false,
@@ -189,10 +193,10 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 2.2,
       "position": [
-        880,
-        -64
+        1376,
+        272
       ],
-      "id": "4e063604-9650-4872-8a8e-241078804df5",
+      "id": "9439d45c-d803-403d-91a4-40e51536560f",
       "name": "AI Agent - Create HTML"
     },
     {
@@ -202,13 +206,13 @@
           "temperature": 0.1
         }
       },
-      "id": "a5b6a64f-537a-4dc3-a1dd-d4fc22428c64",
+      "id": "90cab585-d0bb-4244-9c07-19a8e7b4cf37",
       "name": "OpenAI Model1",
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1,
       "position": [
-        880,
-        144
+        1376,
+        480
       ],
       "credentials": {
         "openAiApi": {
@@ -300,21 +304,17 @@
   },
   "active": false,
   "settings": {
-    "executionOrder": "v1",
-    "saveExecutionProgress": true,
-    "callerPolicy": "workflowsFromSameOwner"
+    "executionOrder": "v1"
   },
-  "versionId": "9e179f96-7845-4e57-a3ff-adbef97b42b1",
+  "versionId": "37e78522-4b12-41b2-88c5-b6aba0f37bb7",
   "meta": {
-    "templateId": "self-building-ai-agent",
-    "templateCredsSetupCompleted": true,
     "instanceId": "5152d9ac095ac50ac164490ed5b6ca31f56c3526e6cebef2c21d86ffe00ae57a"
   },
-  "id": "m1DqzXqHdehZtdYA",
+  "id": "LntGmipOS7aLMFYj",
   "tags": [
     {
-      "createdAt": "2025-09-02T10:53:56.532Z",
       "updatedAt": "2025-09-02T10:53:56.532Z",
+      "createdAt": "2025-09-02T10:53:56.532Z",
       "id": "Y8YuigRvVrch9paJ",
       "name": "github"
     }
