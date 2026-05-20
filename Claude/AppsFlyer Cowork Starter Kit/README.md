@@ -1,24 +1,24 @@
-# Cowork Performance Marketing Starter Kit Setup Guide
+# AppsFlyer Cowork Starter Kit Setup Guide
 
-This guide walks you through the process of downloading and configuring the AppsFlyer Cowork Performance Marketing Starter Kit in Claude Desktop.
+This guide walks you through the process of downloading and configuring the AppsFlyer Cowork Starter Kit in Claude Desktop.
 
 ## Overview
 
-The Cowork Performance Marketing Starter Kit gives growth marketing teams a ready-to-use Cowork project for working with AppsFlyer data through MCP. Drop it into Cowork as an existing folder, say *Let's go*, and Claude handles the rest.
+The AppsFlyer Cowork Starter Kit gives growth marketing teams a ready-to-use Cowork project for working with AppsFlyer data through MCP. Drop it into Cowork as an existing folder, say *Let's go*, and Claude handles the rest.
 
 ## Prerequisites
 
 - Claude Desktop app with Cowork mode enabled
 - AppsFlyer MCP connector added in Cowork (authentication is handled via OAuth — sign in once when prompted, no token to copy or paste). 
-- The starter kit [zip file](https://raw.githubusercontent.com/AppsFlyerKnowledge/appsflyer-ai-agents-examples/refs/heads/main/Claude/Performance%20marketing%20starter%20kit/cowork-performance-marketing-starter-kit.zip)
+- The starter kit [zip file](https://raw.githubusercontent.com/AppsFlyerKnowledge/appsflyer-ai-agents-examples/refs/heads/main/Claude/AppsFlyer%20Cowork%20Starter%20Kit/appsflyer-cowork-starter-kit.zip)
 
 ## Setup
 
 ### Step 1: Download and Unzip the Starter Kit
 
-1. Download the [starter kit zip](https://raw.githubusercontent.com/AppsFlyerKnowledge/appsflyer-ai-agents-examples/refs/heads/main/Claude/Performance%20marketing%20starter%20kit/cowork-performance-marketing-starter-kit.zip).
+1. Download the [starter kit zip](https://raw.githubusercontent.com/AppsFlyerKnowledge/appsflyer-ai-agents-examples/refs/heads/main/Claude/AppsFlyer%20Cowork%20Starter%20Kit/appsflyer-cowork-starter-kit.zip).
 
-2. Unzip it somewhere on your machine you'll remember — for example, `~/work/cowork-performance-marketing-starter-kit`.
+2. Unzip it somewhere on your machine you'll remember — for example, `~/work/appsflyer-cowork-starter-kit`.
 
 ### Step 2: Open Cowork and Go to Projects
 
@@ -40,8 +40,8 @@ You want Claude to work with the folder you just unzipped, not start from scratc
 
 ### Step 5: Point Claude at the Unzipped Folder
 
-1. Click **Choose folder** and select the `cowork-performance-marketing-starter-kit` folder you unzipped in Step 1.
-2. Leave the **Name** as `cowork-performance-marketing-starter-kit` (or rename it to whatever you prefer).
+1. Click **Choose folder** and select the `appsflyer-cowork-starter-kit` folder you unzipped in Step 1.
+2. Leave the **Name** as `appsflyer-cowork-starter-kit` (or rename it to whatever you prefer).
 3. Click **Create**.
 
 ![Configure the project](images/create_project.png)
