@@ -81,3 +81,20 @@ An n8n workflow that generates a scheduled performance marketing executive summa
 All examples require the **AppsFlyer MCP** to be connected and authenticated. Authentication is via OAuth — no API tokens to copy. See the relevant example's `README.md` or `PREREQUISITES.md` for the connection steps.
 
 The core MCP tool used by most examples is `fetch_aggregated_data`. The AppsFlyer MCP is rate-limited to **20 calls/minute and 200 calls/day per user** — agent instructions are designed to stay within this budget.
+
+## Notes & Disclaimer
+
+These examples are provided as-is for educational and exploratory purposes. They include raw prompt structures and workflows designed to help you get started; they do not include pre-configured credentials, live data connections, or production-ready logic.
+
+**What's included:**
+
+- Starter prompt templates and workflows for building AppsFlyer-powered agents
+- Documented placeholders for your own app IDs and configurations
+
+**What's not included:**
+
+- AppsFlyer credentials or account access
+- Guarantees of output accuracy for any specific use case — results are based on your data
+- Support for customizations made beyond these examples
+
+By downloading and using these examples, you take responsibility for their implementation, configuration, and deployment in your environment. AppsFlyer provides these as a starting point; the outcomes depend on your data, your setup, and your decisions. We encourage you to test thoroughly before deploying any workflow. These are not intended to be used in a production environment.

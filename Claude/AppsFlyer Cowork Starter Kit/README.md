@@ -65,4 +65,21 @@ The starter kit is a starting point, not a fixed template:
 - If Claude can't see the starter kit files, re-open the project and confirm the folder path under **Context → On your computer** is correct.
 - If an agent returns no data, double-check the app and date range against what's actually live in your AppsFlyer account.
 
+## Notes & Disclaimer
+
+This template is provided as-is for educational and exploratory purposes. It includes a raw prompt structure designed to help you get started; it does not include pre-configured credentials, live data connections, or production-ready logic.
+
+**What's included:**
+
+- A starter prompt template for building AppsFlyer-powered agents
+- Documented placeholders for your own app IDs and configurations
+
+**What's not included:**
+
+- AppsFlyer credentials or account access
+- Guarantees of output accuracy for any specific use case — results are based on your data
+- Support for customizations made beyond this template
+
+By downloading and using this template, you take responsibility for its implementation, configuration, and deployment in your environment. AppsFlyer provides this as a starting point; the outcomes depend on your data, your setup, and your decisions. We encourage you to test thoroughly before deploying this workflow. This is not intended to be used in a production environment.
+
 ---
